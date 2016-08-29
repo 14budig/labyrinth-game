@@ -97,6 +97,7 @@ $(document).ready(function(){
   }
   placeActors(labyrinth);
   $(document).on('keydown', function(event){
+    event.preventDefault();
     var key = event.keyCode;
     console.log(key);
     if(key === 65 || key===37){
@@ -107,6 +108,7 @@ $(document).ready(function(){
       }
     }//left
     else if(key === 87 || key===38){
+      event.preventDefault();
       console.log("up");
       if(!labyrinth.gameOver && isLegal([(labyrinth.player.location[0]), labyrinth.player.location[1] - 1], labyrinth.map)){
         labyrinth.player.moveUp();
@@ -115,6 +117,7 @@ $(document).ready(function(){
       }
     }//up
     else if(key === 68 || key===39){
+      event.preventDefault();
       console.log("right");
       if(!labyrinth.gameOver && isLegal([(labyrinth.player.location[0] + 1), labyrinth.player.location[1]],labyrinth.map)){
         labyrinth.player.moveRight();
@@ -122,13 +125,18 @@ $(document).ready(function(){
         placeActors(labyrinth);
       }
     }//right
-    else if(!labyrinth.gameOver && key === 83 || key===40){
+    else if(!labyrinth.gameOver && (key === 83 || key===40)){
+      event.preventDefault();
       if(isLegal([(labyrinth.player.location[0]), (labyrinth.player.location[1] + 1)],labyrinth.map)){
         labyrinth.player.moveDown();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
       }
     }//down
+    else if (key === 82){
+      event.preventDefault();
+      window.location.reload()
+    }
   });
 
 
