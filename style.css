@@ -10,6 +10,7 @@ table, th {
 
 th {
   height: 8.5vw;
+  background-color: white;
 }
 
 .exit{
@@ -34,4 +35,6 @@ th {
 
 body{
   text-align: center;
+  color: gold;
+  background-color: #4B0082;
 }
