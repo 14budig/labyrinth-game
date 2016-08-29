@@ -175,7 +175,7 @@ var placeActors = function(labyrinth){
   if(isNextTo(labyrinth.player.location, labyrinth.minotaur.location)){
     //alert("Argh!");
     labyrinth.gameOver = true;
-    $('p').html("Oh no! You've been caught! Try Again!")
+    $('p').html('Oh no! You\'ve been caught! Try Again by pressing "R"!');
   }
 
   if(labyrinth.treasure){
@@ -185,7 +185,7 @@ var placeActors = function(labyrinth){
 
   if(!labyrinth.treasure && labyrinth.player.location[0] == 5 && labyrinth.player.location[1] == 0){
     //alert("win");
-    $('p').html("You win! Press Refresh to play again");
+    $('p').html('You win! Press "R" to play again');
     labyrinth.gameOver = true;
   }
 
