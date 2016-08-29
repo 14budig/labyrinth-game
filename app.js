@@ -88,6 +88,14 @@ var labyrinth = {
 
 $(document).ready(function(){
   labyrinth.initialize();
+  for(var x = 0; x < labyrinth.map.length; x++){
+    for(var y = 0; y < labyrinth.map[x].length; y++){
+      var locString = '#' + x.toString() + "-" + y.toString();
+      if(labyrinth.map[x][y] === "#"){
+        $(locString).addClass('wall');
+      }
+    }
+  }
   $(document).on('keydown', function(event){
     var key = event.keyCode;
     console.log(key);

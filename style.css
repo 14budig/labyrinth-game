@@ -1,0 +1,37 @@
+table{
+  width:100%;
+
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th {
+  height: 8.5vw;
+}
+
+.exit{
+  background-color: yellow;
+}
+
+.wall{
+  background-color: black;
+}
+
+.player{
+  background-color: teal;
+}
+
+.minotaur{
+  background-color: red;
+}
+
+.treasure{
+  background-color: yellow;
+}
+
+body{
+  text-align: center;
+}
