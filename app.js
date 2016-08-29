@@ -57,9 +57,7 @@ var labyrinth = {
       if(isLegal([location[0], location[1]+1])){
         moves.push("down");
       }
-      console.log(moves);
-      console.log(this.location);
-      var randomizer = moves[Math.floor(Math.random(0,moves.length))];
+      var randomizer = moves[Math.floor(Math.random() * moves.length)];
       console.log(randomizer);
       switch (randomizer) {
         case "left":
@@ -96,18 +94,40 @@ $(document).ready(function(){
       }
     }
   }
+  placeActors(labyrinth);
   $(document).on('keydown', function(event){
     var key = event.keyCode;
     console.log(key);
     if(key === 65 || key===37){
-      if(isLegal([(labyrinth.player.location[0] - 1), labyrinth.player.location[1]])){
+      if(isLegal([(labyrinth.player.location[0] - 1), labyrinth.player.location[1]], labyrinth.map)){
         labyrinth.player.moveLeft();
         labyrinth.minotaur.minoMove();
+        placeActors(labyrinth);
       }
     }//left
-    else if(key === 87 || 38){}//up
-    else if(key === 68 || 39){}//right
-    else if(key === 83 || 40){}//down
+    else if(key === 87 || key===38){
+      console.log("up");
+      if(isLegal([(labyrinth.player.location[0]), labyrinth.player.location[1] - 1], labyrinth.map)){
+        labyrinth.player.moveUp();
+        labyrinth.minotaur.minoMove();
+        placeActors(labyrinth);
+      }
+    }//up
+    else if(key === 68 || key===39){
+      console.log("right");
+      if(isLegal([(labyrinth.player.location[0] + 1), labyrinth.player.location[1]],labyrinth.map)){
+        labyrinth.player.moveRight();
+        labyrinth.minotaur.minoMove();
+        placeActors(labyrinth);
+      }
+    }//right
+    else if(key === 83 || key===40){
+      if(isLegal([(labyrinth.player.location[0]), (labyrinth.player.location[1] + 1)],labyrinth.map)){
+        labyrinth.player.moveDown();
+        labyrinth.minotaur.minoMove();
+        placeActors(labyrinth);
+      }
+    }//down
   });
 
 
@@ -115,7 +135,8 @@ $(document).ready(function(){
 
 });
 
-var isLegal = function(location, map){console.log(location);
+var isLegal = function(location, map){
+  console.log(location);
   if (labyrinth.map[location[1]][location[0]] === "."){
     return true;
   }
@@ -123,4 +144,45 @@ var isLegal = function(location, map){console.log(location);
     console.error("Unexpected tile at " + location);
   }
   return false;
+}
+
+var placeActors = function(labyrinth){
+  //$('.player').html("");
+  $('.player').removeClass("player");
+  var position = labyrinth.player.location;
+  var positionStr = "#" + position[1].toString() + "-" + position[0].toString();
+  $(positionStr).addClass("player");
+
+  if(labyrinth.player.location [0]== labyrinth.treasure[0] && labyrinth.player.location [1]== labyrinth.treasure[1]){
+    labyrinth.treasure = false;
+    $(".treasure").removeClass("treasure");
+  }
+
+  $('.minotaur').removeClass("minotaur");
+  position = labyrinth.minotaur.location;
+  positionStr = "#" + position[1].toString() + "-" + position[0].toString();
+  $(positionStr).addClass("minotaur");
+
+  if(isNextTo(labyrinth.player.location, labyrinth.minotaur.location)){
+    //alert("Argh!");
+  }
+
+  if(labyrinth.treasure){
+    positionStr = "#" + labyrinth.treasure[1].toString() + "-" + labyrinth.treasure[0].toString();
+    $(positionStr).removeClass("treasure").addClass("treasure");
+  }
+
+  if(!labyrinth.treasure && labyrinth.player.location[0] == 5 && labyrinth.player.location[1] == 0){
+    //alert("win");
+    $('p').html("You win! Press Refresh to play again")
+  }
+
+}
+var isNextTo = function(arr1, arr2){
+  if(Math.abs(arr1[0]-arr2[0]) <=1 && Math.abs(arr1[1] - arr2[1]) <= 1){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
