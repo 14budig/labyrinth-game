@@ -24,6 +24,7 @@ var labyrinth = {
     var location = [];
     location.push(Math.floor(Math.random(1, this.map.length)));
     location.push(Math.floor(Math.random(1, this.map.length)));
+    this.gameOver = false;
     /*if(isLegal(location)){
       player = new Actor('@', location);
     }
@@ -99,7 +100,7 @@ $(document).ready(function(){
     var key = event.keyCode;
     console.log(key);
     if(key === 65 || key===37){
-      if(isLegal([(labyrinth.player.location[0] - 1), labyrinth.player.location[1]], labyrinth.map)){
+      if(!labyrinth.gameOver && isLegal([(labyrinth.player.location[0] - 1), labyrinth.player.location[1]], labyrinth.map)){
         labyrinth.player.moveLeft();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
@@ -107,7 +108,7 @@ $(document).ready(function(){
     }//left
     else if(key === 87 || key===38){
       console.log("up");
-      if(isLegal([(labyrinth.player.location[0]), labyrinth.player.location[1] - 1], labyrinth.map)){
+      if(!labyrinth.gameOver && isLegal([(labyrinth.player.location[0]), labyrinth.player.location[1] - 1], labyrinth.map)){
         labyrinth.player.moveUp();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
@@ -115,13 +116,13 @@ $(document).ready(function(){
     }//up
     else if(key === 68 || key===39){
       console.log("right");
-      if(isLegal([(labyrinth.player.location[0] + 1), labyrinth.player.location[1]],labyrinth.map)){
+      if(!labyrinth.gameOver && isLegal([(labyrinth.player.location[0] + 1), labyrinth.player.location[1]],labyrinth.map)){
         labyrinth.player.moveRight();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
       }
     }//right
-    else if(key === 83 || key===40){
+    else if(!labyrinth.gameOver && key === 83 || key===40){
       if(isLegal([(labyrinth.player.location[0]), (labyrinth.player.location[1] + 1)],labyrinth.map)){
         labyrinth.player.moveDown();
         labyrinth.minotaur.minoMove();
@@ -165,6 +166,8 @@ var placeActors = function(labyrinth){
 
   if(isNextTo(labyrinth.player.location, labyrinth.minotaur.location)){
     //alert("Argh!");
+    labyrinth.gameOver = true;
+    $('p').html("Oh no! You've been caught! Try Again!")
   }
 
   if(labyrinth.treasure){
@@ -174,7 +177,8 @@ var placeActors = function(labyrinth){
 
   if(!labyrinth.treasure && labyrinth.player.location[0] == 5 && labyrinth.player.location[1] == 0){
     //alert("win");
-    $('p').html("You win! Press Refresh to play again")
+    $('p').html("You win! Press Refresh to play again");
+    labyrinth.gameOver = true;
   }
 
 }
