@@ -30,7 +30,7 @@ th {
 }
 
 .wall{
-  background-color: black;
+  background-color: gray;
 }
 
 .player{
@@ -43,6 +43,11 @@ th {
 
 .treasure{
   background-color: yellow;
+}
+
+
+.blocked{
+  background-color: black;
 }
 
 body{
