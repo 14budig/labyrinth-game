@@ -176,7 +176,7 @@ var placeActors = function(labyrinth){
   var positionStr = "#" + position[1].toString() + "-" + position[0].toString();
   $(positionStr).addClass("player");
 
-  if(labyrinth.player.location [0]== labyrinth.treasure[0] && labyrinth.player.location [1]== labyrinth.treasure[1]){
+  if(labyrinth.player.location[0]== labyrinth.treasure[0] && labyrinth.player.location[1]== labyrinth.treasure[1]){
     labyrinth.treasure = false;
     $(".treasure").removeClass("treasure");
   }
@@ -186,11 +186,8 @@ var placeActors = function(labyrinth){
   positionStr = "#" + position[1].toString() + "-" + position[0].toString();
   $(positionStr).addClass("minotaur");
 
-<<<<<<< HEAD
-  if(labyrinth.minotaur.getDistance(labyrinth.player.location() <= 1)){
-=======
+
   if(getDistance(labyrinth.player.location, labyrinth.minotaur.location)<=1){
->>>>>>> master
     //alert("Argh!");
     labyrinth.gameOver = true;
     $('p').html('Oh no! You\'ve been caught! Try Again by pressing "R"!');
