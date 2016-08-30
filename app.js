@@ -25,6 +25,7 @@ var labyrinth = {
     location.push(Math.floor(Math.random(1, this.map.length)));
     location.push(Math.floor(Math.random(1, this.map.length)));
     this.gameOver = false;
+
     /*if(isLegal(location)){
       player = new Actor('@', location);
     }
@@ -47,7 +48,7 @@ var labyrinth = {
       var moves = [];
       var location = this.location;
       if(isLegal([location[0]-1, location[1]])){
-        moves.push("left");
+          moves.push("left");
       }
       if(isLegal([location[0]+1, location[1]])){
         moves.push("right");
@@ -80,6 +81,7 @@ var labyrinth = {
 
     }
     this.grabbedTreasure = false;
+    draw(labyrinth.map)
   }
 
 
@@ -105,6 +107,7 @@ $(document).ready(function(){
         labyrinth.player.moveLeft();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
+        draw(labyrinth.map)
       }
     }//left
     else if(key === 87 || key===38){
@@ -114,6 +117,7 @@ $(document).ready(function(){
         labyrinth.player.moveUp();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
+        draw(labyrinth.map)
       }
     }//up
     else if(key === 68 || key===39){
@@ -123,6 +127,7 @@ $(document).ready(function(){
         labyrinth.player.moveRight();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
+        draw(labyrinth.map)
       }
     }//right
     else if(!labyrinth.gameOver && (key === 83 || key===40)){
@@ -131,6 +136,7 @@ $(document).ready(function(){
         labyrinth.player.moveDown();
         labyrinth.minotaur.minoMove();
         placeActors(labyrinth);
+        draw(labyrinth.map)
       }
     }//down
     else if (key === 82){
@@ -146,6 +152,9 @@ $(document).ready(function(){
 
 var isLegal = function(location, map){
   console.log(location);
+  if(location[0] < 0 || location[1] < 0){
+    return false;
+  }
   if (labyrinth.map[location[1]][location[0]] === "."){
     return true;
   }
@@ -172,7 +181,7 @@ var placeActors = function(labyrinth){
   positionStr = "#" + position[1].toString() + "-" + position[0].toString();
   $(positionStr).addClass("minotaur");
 
-  if(isNextTo(labyrinth.player.location, labyrinth.minotaur.location)){
+  if(getDistance(labyrinth.player.location, labyrinth.minotaur.location)<=1){
     //alert("Argh!");
     labyrinth.gameOver = true;
     $('p').html('Oh no! You\'ve been caught! Try Again by pressing "R"!');
@@ -190,11 +199,21 @@ var placeActors = function(labyrinth){
   }
 
 }
-var isNextTo = function(arr1, arr2){
-  if(Math.abs(arr1[0]-arr2[0]) <=1 && Math.abs(arr1[1] - arr2[1]) <= 1){
-    return true;
-  }
-  else{
-    return false;
-  }
+
+function getDistance(start, end){
+  return Math.abs(start[0] - end[0])+Math.abs(start[1] - end[1]);
+}
+
+function draw(map){
+  map.forEach(function(is, i, map){
+    is.forEach(function(js, j, is){
+        var id = '#' + j.toString() + '-' + i.toString();
+      if(!getLineOfSight(labyrinth.player.location, [i,j], labyrinth.map)){
+        $(id).addClass('blocked');
+      }
+      else{
+        $(id).removeClass('blocked');
+      }
+    });
+  });
 }
