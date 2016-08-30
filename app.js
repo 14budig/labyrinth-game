@@ -14,6 +14,11 @@ function Actor(tile, location){
   Actor.prototype.moveDown = function(){
       this.location[1]++;
   }
+  Actor.prototype.getDistance = function(target){
+      var x = Math.abs(this.location[0] - target[0]);
+      var y = Math.abs(this.location[1] - target[1]);
+      return x + y
+  }
 
 var labyrinth = {
   map: testMap,
@@ -172,7 +177,7 @@ var placeActors = function(labyrinth){
   positionStr = "#" + position[1].toString() + "-" + position[0].toString();
   $(positionStr).addClass("minotaur");
 
-  if(isNextTo(labyrinth.player.location, labyrinth.minotaur.location)){
+  if(labyrinth.minotaur.getDistance(labyrinth.player.location() <= 1)){
     //alert("Argh!");
     labyrinth.gameOver = true;
     $('p').html('Oh no! You\'ve been caught! Try Again by pressing "R"!');

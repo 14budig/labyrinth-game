@@ -9,8 +9,20 @@ table, th {
 }
 
 th {
-  height: 8.5vw;
+  height: 4.5vw;
   background-color: white;
+}
+
+@media(max-width: 1200px){
+  th {
+    height: 5.5vw;
+  }
+}
+
+@media(max-width: 990px){
+  th {
+    height: 8vw;
+  }
 }
 
 .exit{
