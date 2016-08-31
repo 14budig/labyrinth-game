@@ -14,10 +14,22 @@ function Actor(tile, location){
   Actor.prototype.moveDown = function(){
       this.location[1]++;
   }
-  Actor.prototype.getDistance = function(target){
-      var x = Math.abs(this.location[0] - target[0]);
-      var y = Math.abs(this.location[1] - target[1]);
-      return x + y
+  Actor.prototype.getMoves = function(){
+    var moves = [];
+    var location = this.location;
+    if(isLegal([location[0]-1, location[1]])){
+        moves.push("left");
+    }
+    if(isLegal([location[0]+1, location[1]])){
+      moves.push("right");
+    }
+    if(isLegal([location[0], location[1]-1])){
+      moves.push("up");
+    }
+    if(isLegal([location[0], location[1]+1])){
+      moves.push("down");
+    }
+    return moves;
   }
 
 var labyrinth = {
@@ -49,41 +61,60 @@ var labyrinth = {
     minotaur = new Actor('M', [5,5]);
     this.player = player;
     this.minotaur = minotaur;
+    this.minotaur.seenPlayer = [];
     minotaur.minoMove = function(){
       var moves = [];
       var location = this.location;
-      if(isLegal([location[0]-1, location[1]])){
-          moves.push("left");
+      if(this.seenPlayer.length > 0){
+        if((location[0] === this.seenPlayer[0]) && (location[1] === this.seenPlayer[1]) && !labyrinth.gameOver){
+          this.seenPlayer = [];
+        }
+        else{
+          if(this.seenPlayer[0] > location[0]){
+            if(getLineOfSight([location[1],(location[0] + 1)], [this.seenPlayer[1], this.seenPlayer[0]], labyrinth.map) && isLegal([location[1],(location[0] + 1)])){
+              moves.push("right");
+            }
+          }
+          if(this.seenPlayer[0] < location[0]){
+            if(getLineOfSight([location[1],(location[0] - 1)], [this.seenPlayer[1], this.seenPlayer[0]], labyrinth.map) && isLegal([location[1],(location[0] - 1)])){
+              moves.push("left");
+            }
+          }
+          if(this.seenPlayer[1] > location[1]){
+            if(getLineOfSight([location[1] + 1,location[0]], [this.seenPlayer[1], this.seenPlayer[0]], labyrinth.map) && isLegal([location[1] + 1,location[0]])){
+              moves.push("down");
+            }
+          }
+          if(this.seenPlayer[1] < location[1]){
+            if(getLineOfSight([location[1] - 1,location[0]], [this.seenPlayer[1], this.seenPlayer[0]], labyrinth.map) && isLegal([location[1] - 1,location[0]])){
+              moves.push("up");
+            }
+          }
+        }
       }
-      if(isLegal([location[0]+1, location[1]])){
-        moves.push("right");
+      console.log("moves: " + moves);
+      if(moves.length === 0){
+        moves = this.getMoves();
       }
-      if(isLegal([location[0], location[1]-1])){
-        moves.push("up");
-      }
-      if(isLegal([location[0], location[1]+1])){
-        moves.push("down");
-      }
-      var randomizer = moves[Math.floor(Math.random() * moves.length)];
-      console.log(randomizer);
-      switch (randomizer) {
-        case "left":
-          minotaur.moveLeft();
-          break;
-        case "right":
-          minotaur.moveRight();
-          break;
-        case "up":
-          minotaur.moveUp();
-          break;
-        case "down":
-          minotaur.moveDown();
-          break;
-        default:
-          console.error("Something went wrong in the Minotaur pathing");
-          break;
-      }
-
+        var randomizer = moves[Math.floor(Math.random() * moves.length)];
+        console.log(randomizer);
+        switch (randomizer) {
+          case "left":
+            minotaur.moveLeft();
+            break;
+          case "right":
+            minotaur.moveRight();
+            break;
+          case "up":
+            minotaur.moveUp();
+            break;
+          case "down":
+            minotaur.moveDown();
+            break;
+          default:
+            console.error("Something went wrong in the Minotaur pathing");
+            break;
+        }
     }
     this.grabbedTreasure = false;
     draw(labyrinth.map)
@@ -107,6 +138,11 @@ $(document).ready(function(){
     event.preventDefault();
     var key = event.keyCode;
     console.log(key);
+    if(getLineOfSight(labyrinth.minotaur.location, labyrinth.player.location, labyrinth.map)){
+      labyrinth.minotaur.seenPlayer[0] = labyrinth.player.location[0];
+      labyrinth.minotaur.seenPlayer[1] = labyrinth.player.location[1];
+      console.log("Spotted at " + labyrinth.minotaur.seenPlayer + "!");
+    }
     if(key === 65 || key===37){
       if(!labyrinth.gameOver && isLegal([(labyrinth.player.location[0] - 1), labyrinth.player.location[1]], labyrinth.map)){
         labyrinth.player.moveLeft();
@@ -156,7 +192,6 @@ $(document).ready(function(){
 });
 
 var isLegal = function(location, map){
-  console.log(location);
   if(location[0] < 0 || location[1] < 0){
     return false;
   }
